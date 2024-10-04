@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('nama_mhs');
             $table->string('prodi');
             $table->string('jurusan');
-            $table->string('email')->unique(); 
+            $table->string('email')->unique();
             $table->string('no_hp');
+            $table->string('foto')->nullable(); 
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('biodata__mhs');
+        Schema::dropIfExists('biodata_mhs');
     }
 };

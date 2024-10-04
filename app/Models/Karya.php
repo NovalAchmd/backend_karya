@@ -16,11 +16,15 @@ class Karya extends Model
     protected $primaryKey = 'id_karya';
 
     // Tentukan apakah primary key adalah auto-incrementing
-    public $incrementing = false;
+    public $incrementing = true; // Sesuaikan dengan database, default biasanya true jika integer
+
+    // Tentukan tipe primary key
+    protected $keyType = 'int'; // Jika id_karya adalah integer
 
     // Tentukan atribut yang dapat diisi (fillable)
     protected $fillable = [
         'nim_mhs',
+        'nama_karya', // Tambahkan jika ada
         'desc_karya',
         'tahun_rilis',
         'id_kategori', // Pastikan ini sesuai dengan kolom di database

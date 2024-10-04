@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('karya', function (Blueprint $table) {
             $table->id('id_karya'); // Primary key
+            $table->string('nama_karya'); // Nama karya
             $table->string('nim_mhs'); // Foreign key to biodata_mhs
             $table->text('desc_karya'); // Deskripsi karya
             $table->year('tahun_rilis'); // Tahun rilis

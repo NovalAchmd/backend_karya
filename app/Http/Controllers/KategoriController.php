@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
@@ -21,7 +22,7 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         // Validasi input
-        $request->validate([
+        $validator = Validator::make($request->all(),[
             'jenis_karya' => 'required|string|max:255',
         ]);
 

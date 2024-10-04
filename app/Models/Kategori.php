@@ -20,7 +20,10 @@ class Kategori extends Model
     // Tentukan kunci utama jika tidak menggunakan id
     protected $primaryKey = 'id_kategori'; // Jika 'id_kategori' adalah kunci utama
 
-    // Definisikan relasi dengan model Karya
+    // Tentukan tipe primary key
+    protected $keyType = 'int'; // Jika id_kategori adalah integer
+
+    // Relasi dengan model Karya
     public function karya()
     {
         return $this->hasMany(Karya::class, 'id_kategori', 'id_kategori'); // Pastikan ini juga sesuai

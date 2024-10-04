@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Karya;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class KaryaController extends Controller
 {
@@ -20,13 +21,22 @@ class KaryaController extends Controller
     // Menyimpan karya baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),[
+            'nama_karya'   => 'required|string|max:255', // Validasi untuk nama_karya
             'nim_mhs'      => 'required|string|exists:biodata_mhs,nim_mhs',
             'desc_karya'   => 'required|string',
             'tahun_rilis'  => 'required|date_format:Y',
             'id_kategori'  => 'required|exists:kategori,id_kategori',
             'gambar_karya' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // Memeriksa jika validasi gagal
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 400);
+        }
 
         $karya = new Karya($request->all());
 
@@ -61,6 +71,7 @@ class KaryaController extends Controller
     public function update(Request $request, $id_karya)
     {
         $request->validate([
+            'nama_karya'   => 'required|string|max:255', // Validasi untuk nama_karya
             'desc_karya'   => 'required|string',
             'tahun_rilis'  => 'required|date_format:Y',
             'id_kategori'  => 'required|exists:kategori,id_kategori',
