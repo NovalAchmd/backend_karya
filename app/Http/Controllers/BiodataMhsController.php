@@ -72,39 +72,53 @@ class BiodataMhsController extends Controller
     // Mengupdate biodata
     public function update(Request $request, $nim_mhs)
     {
-        $request->validate([
-            'nama_mhs' => 'required|string',
-            'prodi' => 'required|string',
-            'jurusan' => 'required|string',
-            'email' => 'required|email|unique:biodata_mhs,email,' . $nim_mhs . ',nim_mhs',
-            'no_hp' => 'required|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk foto
+        // Validasi data yang diterima
+        $validator = Validator::make($request->all(), [
+            'nama_mhs' => 'sometimes|required|string',
+            'prodi' => 'sometimes|required|string',
+            'jurusan' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email|unique:biodata_mhs,email,' . $nim_mhs . ',nim_mhs',
+            'no_hp' => 'sometimes|required|string',
+            'foto' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk foto
         ]);
-
+    
+        // Jika validasi gagal, kirim respon error
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 400);
+        }
+    
+        // Cari biodata berdasarkan NIM mahasiswa
         $biodata = BiodataMhs::findOrFail($nim_mhs);
-        $data = $request->all();
-
+    
+        // Ambil data yang akan di-update
+        $data = $request->only(['nama_mhs', 'prodi', 'jurusan', 'email', 'no_hp']); // Ambil data kolom yang diperlukan
+    
         // Jika ada file foto baru yang diunggah
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
             if ($biodata->foto) {
                 Storage::disk('public')->delete($biodata->foto);
             }
-
+    
             $file = $request->file('foto');
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('uploads/foto', $filename, 'public');
             $data['foto'] = $filePath; // Menyimpan path foto yang baru
         }
-
-        $biodata->update($data);
-
+    
+        // Update data biodata dengan hanya kolom yang ada dalam request
+        $biodata->fill($data)->save();
+    
         return response()->json([
             'success' => true,
             'message' => 'Biodata berhasil diupdate.',
             'data' => $biodata
         ], 200);
     }
+    
 
     // Menghapus biodata
     public function destroy($nim_mhs)
