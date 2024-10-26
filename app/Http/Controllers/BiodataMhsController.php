@@ -13,6 +13,14 @@ class BiodataMhsController extends Controller
     public function index()
     {
         $biodatas = BiodataMhs::all();
+
+        // Tambahkan URL foto ke dalam setiap biodata
+        foreach ($biodatas as $biodata) {
+            if ($biodata->foto) {
+                $biodata->foto_url = url('storage/' . $biodata->foto);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'data' => $biodatas
@@ -49,12 +57,17 @@ class BiodataMhsController extends Controller
             $data['foto'] = $filePath; // Menyimpan path foto ke dalam data
         }
 
-        $biodatas = BiodataMhs::create($data);
+        $biodata = BiodataMhs::create($data);
+
+        // Tambahkan URL akses foto
+        if ($biodata->foto) {
+            $biodata->foto_url = url('storage/' . $biodata->foto);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Biodata berhasil ditambahkan.',
-            'data' => $biodatas
+            'data' => $biodata
         ], 201);
     }
 
@@ -62,6 +75,11 @@ class BiodataMhsController extends Controller
     public function show($nim_mhs)
     {
         $biodata = BiodataMhs::findOrFail($nim_mhs);
+
+        // Tambahkan URL akses foto
+        if ($biodata->foto) {
+            $biodata->foto_url = url('storage/' . $biodata->foto);
+        }
 
         return response()->json([
             'success' => true,
@@ -112,6 +130,11 @@ class BiodataMhsController extends Controller
         // Update data biodata dengan hanya kolom yang ada dalam request
         $biodata->fill($data)->save();
     
+        // Tambahkan URL akses foto
+        if ($biodata->foto) {
+            $biodata->foto_url = url('storage/' . $biodata->foto);
+        }
+    
         return response()->json([
             'success' => true,
             'message' => 'Biodata berhasil diupdate.',
@@ -138,4 +161,3 @@ class BiodataMhsController extends Controller
         ], 200);
     }
 }
-

@@ -20,6 +20,7 @@ class BiodataMhs extends Model
         'jurusan',
         'email',
         'no_hp',
+        'foto',
     ];
     // Tentukan primary key
     protected $primaryKey = 'nim_mhs';
