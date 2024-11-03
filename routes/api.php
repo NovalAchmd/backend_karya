@@ -1,11 +1,18 @@
 <?php
 
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KaryaController;
 use App\Http\Controllers\KategoriController;
-use App\Http\Controllers\BiodataMhsController;  
-use Illuminate\Http\Request;
+use App\Http\Controllers\BiodataMhsController;
 
+
+
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::middleware('auth:sanctum')->post('/logout', [LogoutController::class , 'logout']);
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Routes untuk Karya
 Route::prefix('karya')->middleware('api')->group(function () {

@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Laravel\Sanctum\Guard;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 class User extends Model
 {
     use HasFactory;
+    use HasApiTokens, Notifiable;
 
     // Tentukan nama tabel jika tidak mengikuti konvensi penamaan
     protected $table = 'users';
@@ -16,7 +19,6 @@ class User extends Model
     protected $primaryKey = 'username';
 
     // Tentukan apakah primary key adalah auto-incrementing
-    public $incrementing = false;
 
     // Tentukan atribut yang dapat diisi (fillable)
     protected $fillable = [
@@ -24,6 +26,7 @@ class User extends Model
         'password',
         'email',
     ];
+    
 
     // Tidak perlu menambahkan relasi untuk sekarang, tetapi bisa ditambahkan jika ada relasi lain.
 }
